@@ -1,81 +1,76 @@
 package controller;
 
 import model.Student;
+import model.Subject;
 import org.apache.log4j.Logger;
-import utils.DatabaseUtils;
-import utils.PropertyLoader;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class StudentDaoImpl implements StudentDao {
-
+public class SubjectDaoImpl implements SubjectDao {
     private static final Logger log = Logger.getLogger(StudentDao.class.getName());
     private EntityManagerFactory factory;
 
-    public StudentDaoImpl(EntityManagerFactory factory) {
+    public SubjectDaoImpl(EntityManagerFactory factory) {
         this.factory = factory;
     }
 
     @Override
-    public Student add(Student student) {
-        log.info("addStudent student");
+    public Subject add(Subject subject) {
+        log.info("addSubject");
         EntityManager manager = factory.createEntityManager();
         EntityTransaction transaction = manager.getTransaction();
         try {
             transaction.begin();
-            manager.persist(student);
+            manager.persist(subject);
             transaction.commit();
-            return student;
+            return subject;
         } catch (Exception e) {
             log.error(e);
             transaction.rollback();
         } finally {
             manager.close();
         }
-        return student;
+        return subject;
     }
 
     @Override
-    public List<Student> getAll() {
+    public List<Subject> getAll() {
         EntityManager manager = factory.createEntityManager();
         try {
-            TypedQuery<Student> students = manager.createQuery("FROM Student", Student.class);
-            return students.getResultList();
+            TypedQuery<Subject> subjects = manager.createQuery("FROM Subject", Subject.class);
+            return subjects.getResultList();
         } finally {
             manager.close();
         }
     }
 
     @Override
-    public Student getById(Object id) {
+    public Subject getById(Object id) {
         EntityManager manager = factory.createEntityManager();
-        Student toReturn;
+        Subject toReturn;
         try {
-            log.info("get student by id");
-            toReturn = manager.find(Student.class, id);
+            log.info("get subject by id");
+            toReturn = manager.find(Subject.class, id);
         } finally {
-
             manager.close();
         }
         return toReturn;
     }
 
     @Override
-    public Student update(Object studentId, Student newData) {
-        log.info("updating student");
+    public Subject update(Object subjectId, Subject newData) {
+        log.info("updating subject");
         EntityManager manager = factory.createEntityManager();
         EntityTransaction transaction = manager.getTransaction();
         try {
-            Student toUpdate = manager.find(Student.class, studentId);
+            Subject toUpdate = manager.find(Subject.class, subjectId);
             transaction.begin();
             toUpdate.setName(newData.getName());
-            toUpdate.setGroupId(newData.getGroupId());
+            toUpdate.setDescription(newData.getDescription());
             transaction.commit();
             return toUpdate;
         } catch (Exception e) {
@@ -88,13 +83,13 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Student delete(Object id) {
-        log.info("delete student");
+    public Subject delete(Object id) {
+        log.info("delete subject");
         EntityManager manager = factory.createEntityManager();
         EntityTransaction transaction = manager.getTransaction();
-        Student toDelete = null;
+        Subject toDelete = null;
         try {
-            toDelete = manager.find(Student.class, id);
+            toDelete = manager.find(Subject.class, id);
             transaction.begin();
             manager.remove(id);
             transaction.commit();
@@ -109,13 +104,11 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> getByGroupId(Object groupId) {
+    public List<Subject> getHumanitarian() {
         EntityManager manager = factory.createEntityManager();
         try {
-            TypedQuery<Student> students =
-                    manager.createQuery("FROM Student s WHERE s.groupId =:groupId", Student.class);
-            students.setParameter("groupId", groupId);
-            return students.getResultList();
+            TypedQuery<Subject> humanitarian = manager.createQuery("FROM Subject s WHERE s.description='humanitarian'", Subject.class);
+            return humanitarian.getResultList();
         } finally {
             manager.close();
         }

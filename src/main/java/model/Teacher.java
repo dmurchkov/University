@@ -1,24 +1,37 @@
 package model;
 
-public class Teacher {
-    private int id;
-    private String name;
-    private int experience;
-    private int subjectId;
+import javax.persistence.*;
 
-    public Teacher(int id, String name, int experience, int subjectId) {
-        this.id = id;
+@Entity
+@Table(name = "teachers")
+public class Teacher extends IdEntity {
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private int experience;
+
+    @Column(nullable = false)
+    private int subjectId;
+    @ManyToOne
+    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    //--> create subject_id column in teachers table (subject_id is a foreign key)
+    private Subject subject;
+
+    public Teacher() {
+    }
+
+    public Teacher(String name, int experience, int subjectId) {
         this.name = name;
         this.experience = experience;
         this.subjectId = subjectId;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Teacher(String name, int experience, int subjectId, Subject subject) {
+        this.name = name;
+        this.experience = experience;
+        this.subjectId = subjectId;
+        this.subject = subject;
     }
 
     public String getName() {
@@ -45,27 +58,43 @@ public class Teacher {
         this.subjectId = subjectId;
     }
 
-    @Override
-    public String toString() {
-        return "model.Teacher{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", experience=" + experience +
-                ", subjectId=" + subjectId +
-                '}';
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Teacher teacher = (Teacher) o;
 
-        if (id != teacher.id) return false;
-        if (experience != teacher.experience) return false;
-        if (subjectId != teacher.subjectId) return false;
-        return name != null ? name.equals(teacher.name) : teacher.name == null;
+        return this.getId() == teacher.getId() &&
+                this.getName().equals(teacher.getName()) &&
+                this.getExperience() == teacher.getExperience();
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + experience;
+        result = 31 * result + subjectId;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "name='" + name + '\'' +
+                ", experience=" + experience +
+                ", subjectId=" + subjectId +
+                '}';
     }
 }

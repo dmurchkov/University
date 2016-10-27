@@ -1,81 +1,76 @@
 package controller;
 
+import model.Group;
 import model.Student;
 import org.apache.log4j.Logger;
-import utils.DatabaseUtils;
-import utils.PropertyLoader;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class StudentDaoImpl implements StudentDao {
+public class GroupDaoImpl implements GroupDao {
 
     private static final Logger log = Logger.getLogger(StudentDao.class.getName());
     private EntityManagerFactory factory;
 
-    public StudentDaoImpl(EntityManagerFactory factory) {
+    public GroupDaoImpl(EntityManagerFactory factory) {
         this.factory = factory;
     }
 
     @Override
-    public Student add(Student student) {
-        log.info("addStudent student");
+    public Group add(Group group) {
+        log.info("addGroup");
         EntityManager manager = factory.createEntityManager();
         EntityTransaction transaction = manager.getTransaction();
         try {
             transaction.begin();
-            manager.persist(student);
+            manager.persist(group);
             transaction.commit();
-            return student;
+            return group;
         } catch (Exception e) {
             log.error(e);
             transaction.rollback();
         } finally {
             manager.close();
         }
-        return student;
+        return group;
     }
 
     @Override
-    public List<Student> getAll() {
+    public List<Group> getAll() {
         EntityManager manager = factory.createEntityManager();
         try {
-            TypedQuery<Student> students = manager.createQuery("FROM Student", Student.class);
-            return students.getResultList();
+            TypedQuery<Group> groups = manager.createQuery("FROM Group", Group.class);
+            return groups.getResultList();
         } finally {
             manager.close();
         }
     }
 
     @Override
-    public Student getById(Object id) {
+    public Group getById(Object id) {
         EntityManager manager = factory.createEntityManager();
-        Student toReturn;
+        Group toReturn;
         try {
-            log.info("get student by id");
-            toReturn = manager.find(Student.class, id);
+            log.info("get group by id");
+            toReturn = manager.find(Group.class, id);
         } finally {
-
             manager.close();
         }
         return toReturn;
     }
 
     @Override
-    public Student update(Object studentId, Student newData) {
-        log.info("updating student");
+    public Group update(Object groupId, Group newData) {
+        log.info("updating group");
         EntityManager manager = factory.createEntityManager();
         EntityTransaction transaction = manager.getTransaction();
         try {
-            Student toUpdate = manager.find(Student.class, studentId);
+            Group toUpdate = manager.find(Group.class, groupId);
             transaction.begin();
             toUpdate.setName(newData.getName());
-            toUpdate.setGroupId(newData.getGroupId());
             transaction.commit();
             return toUpdate;
         } catch (Exception e) {
@@ -88,13 +83,13 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Student delete(Object id) {
-        log.info("delete student");
+    public Group delete(Object id) {
+        log.info("delete group");
         EntityManager manager = factory.createEntityManager();
         EntityTransaction transaction = manager.getTransaction();
-        Student toDelete = null;
+        Group toDelete = null;
         try {
-            toDelete = manager.find(Student.class, id);
+            toDelete = manager.find(Group.class, id);
             transaction.begin();
             manager.remove(id);
             transaction.commit();
@@ -106,18 +101,5 @@ public class StudentDaoImpl implements StudentDao {
             manager.close();
         }
         return toDelete;
-    }
-
-    @Override
-    public List<Student> getByGroupId(Object groupId) {
-        EntityManager manager = factory.createEntityManager();
-        try {
-            TypedQuery<Student> students =
-                    manager.createQuery("FROM Student s WHERE s.groupId =:groupId", Student.class);
-            students.setParameter("groupId", groupId);
-            return students.getResultList();
-        } finally {
-            manager.close();
-        }
     }
 }

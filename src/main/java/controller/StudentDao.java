@@ -6,13 +6,15 @@ import java.util.List;
 
 public interface StudentDao {
 
-    boolean add(Student student);
+    Student add(Student student);
 
     List<Student> getAll();
 
-    Student getById(int id);
+    Student getById(Object id);
 
-    Student update(int studentId, Student newData);
+    Student update(Object studentId, Student newData);
 
-    Student delete(int id);
+    Student delete(Object id);
+
+    List<Student> getByGroupId(Object groupId);
 }

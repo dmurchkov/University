@@ -1,4 +1,4 @@
-package jpa_intro.model;
+package model;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

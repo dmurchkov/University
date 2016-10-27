@@ -11,13 +11,16 @@
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>jpa_intro.model.Author</class>
-        <class>jpa_intro.model.Book</class>
+        <class>model.Student</class>
+        <class>model.Subject</class>
+        <class>model.Group</class>
+        <class>model.Teacher</class>
+        <class>model.Mark</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <!--data base must be created before init persistence.xml -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jpa"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/university_jpa"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
 

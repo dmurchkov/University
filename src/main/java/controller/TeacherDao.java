@@ -6,14 +6,21 @@ import java.util.List;
 
 public interface TeacherDao {
 
-    Teacher add(String name, int experience, int subjectId);
+    Teacher add(Teacher teacher);
 
     List<Teacher> getAll();
 
-    Teacher getById(int id);
+    Teacher getById(Object id);
 
-    Teacher update(int id, String newName, int newExperience, int newGroupId);
+    Teacher update(Object teacherId, Teacher newData);
 
-    Teacher delete(int id);
+    Teacher delete(Object id);
+
+    List<Teacher> withMinExperience();
+
+    List<Teacher> withMaxExperience();
+
+    List<Teacher> getByExperience(Object experience);
+
 }
 
