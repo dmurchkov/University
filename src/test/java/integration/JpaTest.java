@@ -4,6 +4,8 @@ import model.*;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.log4j.Logger;
 import org.junit.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.ServiceImpl;
 import utils.DatabaseUtils;
 
@@ -27,7 +29,9 @@ public class JpaTest {
     @Before
     public void createData() {
         scriptRunner.runScript(new InputStreamReader(JpaTest.class.getResourceAsStream("/create_university_jpa_db.sql")));
-        factory = Persistence.createEntityManagerFactory("hibernate-unit");
+        //factory = Persistence.createEntityManagerFactory("hibernate-unit");
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:app-context.xml");
+        factory = (EntityManagerFactory) context.getBean("entityManagerFactory");
         service = new ServiceImpl(factory);
 
         Group g1 = new Group("A1");
