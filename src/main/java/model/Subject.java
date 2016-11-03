@@ -14,7 +14,7 @@ public class Subject extends IdEntity {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "subject") // see subject field in Teacher class
+    @OneToMany(mappedBy = "subject")
     private List<Teacher> teacherList;
 
     @ManyToMany(cascade = {CascadeType.ALL})
